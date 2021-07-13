@@ -11,7 +11,7 @@ then
   exit -1
 fi
 
-APP_CONF_FILE="src/main/resources/application.properties" # Add the "BUILD=0" line before run this script first time!!!
+APP_CONF_FILE="src/main/resources/application.properties" # Add the "BUILD=1" line before run this script first time!!!
 BUILD_TAG=build
 
 build=$(grep -i "BUILD=" $APP_CONF_FILE | cut -d= -f2)
