@@ -27,4 +27,6 @@ then
   sed -i "s/BUILD=[0-9]\+/$BUILD_TAG=$build/gi" $APP_CONF_FILE
 fi
 
+git push -u origin-git master
+
 git log -n 4 --oneline
