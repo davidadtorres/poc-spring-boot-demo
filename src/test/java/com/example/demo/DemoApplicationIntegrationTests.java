@@ -42,7 +42,7 @@ class DemoApplicationIntegrationTests {
 	HttpHeaders headers = new HttpHeaders();
 
 	@Test
-	@Sql({ "test-tutorial-data.sql" })
+	@Sql(scripts = { "file:src/test/java/com/example/demo/test-tutorial-data.sql" })
 	public void test1_populate_database() {
 		assertThat(tutorialRepository.count()).isEqualTo(NUM_TUTORIALS);
 	}
