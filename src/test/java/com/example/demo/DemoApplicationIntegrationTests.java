@@ -81,7 +81,7 @@ class DemoApplicationIntegrationTests {
 		assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
 
 		Tutorial tutorial = response.getBody();
-		assertThat(tutorial).hasFieldOrPropertyWithValue("id", 1L);
+		assertThat(tutorial).hasFieldOrPropertyWithValue("id", 2L);
 		assertThat(tutorial).hasFieldOrPropertyWithValue("title", "Spring Boot Tut#1");
 		assertThat(tutorial).hasFieldOrPropertyWithValue("description", "Desc for Tut#1");
 		assertThat(tutorial).hasFieldOrPropertyWithValue("published", false);
