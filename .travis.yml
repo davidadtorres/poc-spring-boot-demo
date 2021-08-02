@@ -8,6 +8,7 @@ services:
 before_install:
   - docker build . -t poc-spring-boot-demo:local
 deploy:
+  skip_cleanup: true
   provider: elasticbeanstalk
   region: "us-east-2"                                     # Where the server of the Elastic Beanstalk app environment exists
   app: "poc-spring-boot-demo"                             # The Elastic Beanstalk app name
