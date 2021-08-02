@@ -10,8 +10,15 @@ A basic RESTful CRUD API with Spring Boot.
     - [Useful links](#useful-links)
     - [Database initialization](#database-initialization)
     - [API calls](#api-calls)
-4. [Improvements](#improvements)
-5. [Conclusion](#conclusion)
+4. [CI/CD](#cicd)
+    - [Dockerfile](#dockerfile)
+    - [Create AWS Elastic Beanstalk app](#create-aws-elastic-beanstalk-app)
+    - [Create an IAM non-root user](#create-an-iam-non-root-user)
+    - [Create AWS S3 Bucket](#...)
+    - [Add Environment variables in Travis-CI](#...)
+    - [Travis yaml](#travis-yaml)    
+5. [Improvements](#improvements)
+6. [Conclusion](#conclusion)
 
 <a name="description"></a>
 ## Description
@@ -147,6 +154,95 @@ ALTER SEQUENCE HIBERNATE_SEQUENCE restart with 13;
     "version": "0.0.1-SNAPSHOT",
     "timestamp": "13-07-2021 12:33"
 }
+```
+
+<a name="cicd"></a>
+## CI/CD
+
+<a name="dockerfile"></a>
+### **Dockerfile**
+
+```dockerfile
+FROM openjdk:11 as build
+WORKDIR /workspace/app
+
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+COPY src src
+
+RUN ./mvnw install -DskipTests
+RUN mkdir -p target/dependency; cd target/dependency; jar -xf ../*.jar
+
+FROM openjdk:11
+VOLUME /tmp
+ARG DEPENDENCY=/workspace/app/target/dependency
+COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
+COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
+ENTRYPOINT ["java","-cp","/app:/app/lib/*","com.example.demo.DemoApplication"]
+```
+
+<a name="create-aws-elastic-beanstalk-app"></a>
+### **Create AWS Elastic Beanstalk app**
+
+<u>AWS Beanstalk console:</u>
+
+![](info/beanstalk-1.png)
+
+<u>Configure as Docker app:</u>
+
+![](info/beanstalk-2.png)
+
+<u>Create app:</u>
+
+![](info/beanstalk-3.png)
+
+<u>Creation process:</u>
+
+![](info/beanstalk-4.png)
+
+<u>Creation successfully:</u>
+
+![](info/beanstalk-5.png)
+
+
+<a name="create-an-iam-non-root-user"></a>
+### **Create an IAM non-root user**
+
+<u>Create a user under IAM service:</u>
+
+![](info/iam-1.png)
+
+<u>Configure user:</u>
+
+![](info/iam-2.png)
+
+<u>Attach required policies:</u>
+
+![](info/iam-3.png)
+
+<u>Create user without tags:</u>
+
+![](info/iam-4.png)
+
+<u>Keep safe credentials (Access key ID and Secret access key):</u>
+
+![](info/iam-5.png)
+
+<a name="travis-yaml"></a>
+### **Travis yaml**
+
+```yaml
+language: java
+jdk:
+  - openjdk11
+os:
+  - linux
+services:
+  - docker
+before_install:
+  - docker build . -t poc-spring-boot-demo:local
 ```
 
 <a name="improvements"></a>

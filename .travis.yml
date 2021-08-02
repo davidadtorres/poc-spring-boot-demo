@@ -7,3 +7,14 @@ services:
   - docker
 before_install:
   - docker build . -t poc-spring-boot-demo:local
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"                                     # Where the server of the Elastic Beanstalk app environment exists
+  app: "poc-spring-boot-demo"                             # The Elastic Beanstalk app name
+  env: "Pocspringbootdemo-env"                            # The Elastic Beanstalk app environment name
+  bucket_name: "elasticbeanstalk-us-east-2-553172233217"  # The S3 bucket generated for the server location used for your environment
+  bucket_path: "travis-path"                              # The folder created on AWS to receive the app sent from Travis-CI
+  on:
+    branch: master
+  access_key_id: "$AWS_ACCESS_KEY_ID"
+  secret_access_key: "$AWS_SECRET_ACCESS_KEY"
